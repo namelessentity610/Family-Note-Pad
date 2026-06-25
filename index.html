@@ -10,13 +10,12 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f2f2f7; color: #1c1c1e; min-height: 100vh; }
-    #app { max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
+    #app { max-width: 600px; margin: 0 auto; padding-bottom: 90px; }
     .header { padding: 20px 16px 8px; }
     .header-sub { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: #8e8e93; text-transform: uppercase; }
     .header-title { font-size: 26px; font-weight: 700; color: #1c1c1e; margin-top: 2px; }
-    .tab-bar { display: flex; overflow-x: auto; padding: 10px 16px 0; gap: 6px; scrollbar-width: none; }
-    .tab-bar::-webkit-scrollbar { display: none; }
-    .tab-btn { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
+    .tab-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 10px 16px 0; }
+    .tab-btn { padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 500; cursor: pointer; text-align: center; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; line-height: 1.3; }
     .tab-btn.active { background: #fff; color: #1c1c1e; border-color: transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
     .content { padding: 16px; }
     .section { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 14px; }
@@ -54,13 +53,18 @@
     .done-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8e8e93; text-transform: uppercase; }
     .clear-done-btn { background: none; border: none; color: #8e8e93; font-size: 12px; cursor: pointer; text-decoration: underline; font-family: inherit; }
     .project-card { background: #f9f9f9; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
-    .project-name { font-size: 16px; font-weight: 500; color: #1c1c1e; flex: 1; }
     .project-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .status-btns { display: flex; gap: 6px; margin-bottom: 10px; }
+    .project-name { font-size: 16px; font-weight: 600; color: #1c1c1e; flex: 1; }
+    .status-btns { display: flex; gap: 6px; margin-bottom: 12px; }
     .status-btn { flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
     .status-btn.needs { background: #fff3cd; color: #856404; border-color: transparent; }
     .status-btn.idle { background: #d1f2e0; color: #1a6435; border-color: transparent; }
-    .project-note { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 13px; border: 1px solid #d1d1d6; background: #fff; color: #1c1c1e; outline: none; font-family: inherit; }
+    .project-notes-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #8e8e93; text-transform: uppercase; margin-bottom: 6px; }
+    .project-note-item { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #e5e5ea; }
+    .project-note-text { flex: 1; font-size: 14px; color: #1c1c1e; }
+    .project-note-add-row { display: flex; gap: 6px; margin-top: 8px; }
+    .project-note-input { flex: 1; border-radius: 8px; padding: 9px 12px; font-size: 14px; border: 1px solid #d1d1d6; background: #fff; color: #1c1c1e; outline: none; font-family: inherit; }
+    .project-note-input:focus { border-color: #007aff; }
     .add-project-btn { width: 100%; background: none; border: 1px dashed #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 14px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
     .list-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
     .list-tab-btn { padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
@@ -72,11 +76,13 @@
     .empty-msg { text-align: center; color: #8e8e93; font-size: 14px; padding: 32px 0; }
     .sync-status { font-size: 11px; color: #8e8e93; text-align: right; padding: 4px 16px 0; }
     .day-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
-    .day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
     .day-title { font-size: 17px; font-weight: 600; color: #1c1c1e; }
+    .day-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
     .context-toggle { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid #d1d1d6; }
     .context-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: none; color: #8e8e93; font-family: inherit; }
     .context-btn.active { background: #007aff; color: #fff; }
+    .day-select { border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 500; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; cursor: pointer; }
     .meal-row { margin-bottom: 10px; }
     .meal-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
     .meal-input { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 14px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
@@ -106,14 +112,17 @@
       .check-btn { border-color: #3a3a3c; }
       .project-card { background: #1c1c1e; }
       .project-name { color: #f2f2f7; }
+      .project-note-text { color: #f2f2f7; }
+      .project-note-item { border-bottom-color: #3a3a3c; }
+      .project-note-input { background: #2c2c2e; border-color: #3a3a3c; color: #f2f2f7; }
       .status-btn { border-color: #3a3a3c; }
-      .project-note { background: #2c2c2e; border-color: #3a3a3c; color: #f2f2f7; }
       .add-project-btn { border-color: #3a3a3c; }
       .list-tab-btn { border-color: #3a3a3c; }
       .new-list-btn { border-color: #3a3a3c; }
       .single-add-row input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
       .context-toggle { border-color: #3a3a3c; }
       .context-btn { color: #8e8e93; }
+      .day-select { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
       .meal-input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
       .meal-input:focus { background: #2c2c2e; border-color: #007aff; }
       .day-title { color: #f2f2f7; }
@@ -132,18 +141,16 @@
   <div class="sync-status" id="sync-status">Connecting…</div>
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('lists')">≡ Lists</button>
-    <button class="tab-btn" onclick="switchTab('today')">✓ Today</button>
+    <button class="tab-btn" onclick="switchTab('notes')">✎ Notes</button>
     <button class="tab-btn" onclick="switchTab('projects')">⚙ In Progress</button>
     <button class="tab-btn" onclick="switchTab('food')">🥗 Food</button>
-    <button class="tab-btn" onclick="switchTab('notes')">✎ Notes</button>
-    <button class="tab-btn" onclick="switchTab('pay')">💰 Pay Cycle</button>
+    <button class="tab-btn" onclick="switchTab('pay')">💰 Pay</button>
   </div>
   <div class="content">
     <div id="tab-lists"></div>
-    <div id="tab-today" style="display:none"></div>
+    <div id="tab-notes" style="display:none"></div>
     <div id="tab-projects" style="display:none"></div>
     <div id="tab-food" style="display:none"></div>
-    <div id="tab-notes" style="display:none"></div>
     <div id="tab-pay" style="display:none"></div>
   </div>
 </div>
@@ -167,17 +174,16 @@
 
   const MEALS = ["breakfast","midmorning","lunch","afternoon","dinner","other"];
   const MEAL_LABELS = { breakfast:"Breakfast", midmorning:"Mid-Morning Snack", lunch:"Lunch", afternoon:"Afternoon Snack", dinner:"Dinner", other:"Other" };
+  const DAYS_OF_WEEK = ["—","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
   let state = {
     lists: { order:["grocery","supply","checkout"], grocery:{name:"Grocery",items:{}}, supply:{name:"Supply",items:{}}, checkout:{name:"To Check Out",items:{}} },
-    today: { items:{} },
-    projects: { items:{} },
-    food: { day1:{context:"work",meals:{}}, day2:{context:"work",meals:{}}, day3:{context:"work",meals:{}} },
     notes: { items:{} },
+    projects: { items:{} },
+    food: { day1:{context:"work",day:"—",meals:{}}, day2:{context:"work",day:"—",meals:{}}, day3:{context:"work",day:"—",meals:{}} },
     pay: { working:"", bills:{}, outstanding:{} }
   };
 
-  let activeTab = "lists";
   let activeList = "grocery";
   const syncStatus = document.getElementById("sync-status");
 
@@ -213,13 +219,12 @@
   }
 
   window.switchTab = function(tab) {
-    activeTab = tab;
-    const tabs = ["lists","today","projects","food","notes","pay"];
+    const tabs = ["lists","notes","projects","food","pay"];
     document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", tabs[i] === tab));
     tabs.forEach(t => { document.getElementById("tab-"+t).style.display = t === tab ? "block" : "none"; });
   };
 
-  function renderAll() { renderLists(); renderToday(); renderProjects(); renderFood(); renderNotes(); renderPay(); }
+  function renderAll() { renderLists(); renderNotes(); renderProjects(); renderFood(); renderPay(); }
 
   // ── LISTS ────────────────────────────────────────────────
   function renderLists() {
@@ -283,47 +288,33 @@
     renderLists();
   };
 
-  // ── TODAY ────────────────────────────────────────────────
-  function renderToday() {
-    const el=document.getElementById("tab-today");
-    const items=state.today?.items||{};
+  // ── NOTES ────────────────────────────────────────────────
+  function renderNotes() {
+    const el=document.getElementById("tab-notes");
+    const items=state.notes?.items||{};
     const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
-    const open=arr.filter(i=>!i.done); const done=arr.filter(i=>i.done);
     el.innerHTML=`
-      <div class="single-add-row">
-        <input id="today-input" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTodayItem()" />
-        <button class="add-btn" onclick="addTodayItem()">+</button>
-      </div>
-      ${open.length===0&&done.length===0?'<div class="empty-msg">Nothing on the list</div>':''}
-      ${open.map(item=>`
-        <div class="todo-item">
-          <button class="check-btn" onclick="toggleToday('${item.id}')"></button>
-          <span class="todo-text">${escHtml(item.text)}</span>
-          <button class="remove-btn" onclick="removeToday('${item.id}')">×</button>
+      ${arr.length===0?'<div class="empty-msg">No notes yet</div>':''}
+      ${arr.map(n=>`
+        <div class="note-card">
+          <input class="note-title-input" placeholder="Title…" value="${escHtml(n.title||'')}" onchange="setNoteTitle('${n.id}',this.value)" />
+          <textarea class="note-body-input" placeholder="Start typing…" onchange="setNoteBody('${n.id}',this.value)">${escHtml(n.body||'')}</textarea>
+          <div class="note-footer">
+            <button class="delete-note-btn" onclick="deleteNote('${n.id}')">Delete note</button>
+          </div>
         </div>`).join("")}
-      ${done.length>0?`
-        <div class="done-section-header">
-          <span class="done-label">Done (${done.length})</span>
-          <button class="clear-done-btn" onclick="clearDoneToday()">Clear</button>
-        </div>
-        ${done.map(item=>`
-          <div class="todo-item" style="opacity:0.45">
-            <button class="check-btn checked" onclick="toggleToday('${item.id}')">✓</button>
-            <span class="todo-text done">${escHtml(item.text)}</span>
-            <button class="remove-btn" onclick="removeToday('${item.id}')">×</button>
-          </div>`).join("")}`:""}`;
+      <button class="add-note-btn" onclick="addNote()">+ New note</button>`;
   }
-  window.addTodayItem = function() {
-    const input=document.getElementById("today-input"); const text=input.value.trim(); if(!text) return;
-    const id="i"+uid(); const item={text,done:false,ts:Date.now()};
-    if(!state.today.items) state.today.items={};
-    state.today.items[id]=item; save("today/items/"+id,item); input.value=""; renderToday();
+  window.addNote = function() {
+    const id="n"+uid(); const item={title:"",body:"",ts:Date.now()};
+    if(!state.notes.items) state.notes.items={};
+    state.notes.items[id]=item; save("notes/items/"+id,item); renderNotes();
   };
-  window.toggleToday = function(id) { const item=state.today.items[id]; item.done=!item.done; save("today/items/"+id+"/done",item.done); renderToday(); };
-  window.removeToday = function(id) { delete state.today.items[id]; save("today/items/"+id,null); renderToday(); };
-  window.clearDoneToday = function() {
-    Object.entries(state.today.items||{}).forEach(([id,v])=>{ if(v.done){ delete state.today.items[id]; save("today/items/"+id,null); }});
-    renderToday();
+  window.setNoteTitle = function(id,value) { if(!state.notes.items[id]) return; state.notes.items[id].title=value; save("notes/items/"+id+"/title",value); };
+  window.setNoteBody = function(id,value) { if(!state.notes.items[id]) return; state.notes.items[id].body=value; save("notes/items/"+id+"/body",value); };
+  window.deleteNote = function(id) {
+    if(!confirm("Delete this note?")) return;
+    delete state.notes.items[id]; save("notes/items/"+id,null); renderNotes();
   };
 
   // ── PROJECTS ─────────────────────────────────────────────
@@ -332,7 +323,9 @@
     const items=state.projects?.items||{};
     const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
     el.innerHTML=`
-      ${arr.map(p=>`
+      ${arr.map(p=>{
+        const notes=Object.entries(p.notes||{}).map(([nid,v])=>({nid,...v})).sort((a,b)=>a.ts-b.ts);
+        return `
         <div class="project-card">
           <div class="project-header">
             <span class="project-name">${escHtml(p.name)}</span>
@@ -342,19 +335,37 @@
             <button class="status-btn ${p.status==='active'?'needs':''}" onclick="setProjectStatus('${p.id}','active')">⚠ Needs action</button>
             <button class="status-btn ${p.status!=='active'?'idle':''}" onclick="setProjectStatus('${p.id}','idle')">✓ Running fine</button>
           </div>
-          <input class="project-note" placeholder="Notes…" value="${escHtml(p.note||'')}" onchange="setProjectNote('${p.id}',this.value)" />
-        </div>`).join("")}
+          <div class="project-notes-label">Notes</div>
+          ${notes.map(n=>`
+            <div class="project-note-item">
+              <span class="project-note-text">${escHtml(n.text)}</span>
+              <button class="remove-btn" onclick="removeProjectNote('${p.id}','${n.nid}')">×</button>
+            </div>`).join("")}
+          <div class="project-note-add-row">
+            <input class="project-note-input" id="pnote-${p.id}" placeholder="Add a note…" onkeydown="if(event.key==='Enter')addProjectNote('${p.id}')" />
+            <button class="add-btn" onclick="addProjectNote('${p.id}')" style="width:36px;font-size:16px">+</button>
+          </div>
+        </div>`;
+      }).join("")}
       <button class="add-project-btn" onclick="promptAddProject()">+ Add project</button>`;
   }
   window.promptAddProject = function() {
     const name=prompt("Project name:"); if(!name?.trim()) return;
-    const id="p"+uid(); const item={name:name.trim(),status:"idle",note:"",ts:Date.now()};
+    const id="p"+uid(); const item={name:name.trim(),status:"idle",notes:{},ts:Date.now()};
     if(!state.projects.items) state.projects.items={};
     state.projects.items[id]=item; save("projects/items/"+id,item); renderProjects();
   };
   window.removeProject = function(id) { delete state.projects.items[id]; save("projects/items/"+id,null); renderProjects(); };
   window.setProjectStatus = function(id,status) { state.projects.items[id].status=status; save("projects/items/"+id+"/status",status); renderProjects(); };
-  window.setProjectNote = function(id,note) { state.projects.items[id].note=note; save("projects/items/"+id+"/note",note); };
+  window.addProjectNote = function(pid) {
+    const input=document.getElementById("pnote-"+pid); const text=input.value.trim(); if(!text) return;
+    const nid="pn"+uid(); const item={text,ts:Date.now()};
+    if(!state.projects.items[pid].notes) state.projects.items[pid].notes={};
+    state.projects.items[pid].notes[nid]=item; save("projects/items/"+pid+"/notes/"+nid,item); input.value=""; renderProjects();
+  };
+  window.removeProjectNote = function(pid,nid) {
+    delete state.projects.items[pid].notes[nid]; save("projects/items/"+pid+"/notes/"+nid,null); renderProjects();
+  };
 
   // ── FOOD ─────────────────────────────────────────────────
   function renderFood() {
@@ -362,15 +373,21 @@
     const food=state.food||{};
     const days=["day1","day2","day3"];
     el.innerHTML=days.map((day,i)=>{
-      const d=food[day]||{context:"work",meals:{}};
+      const d=food[day]||{context:"work",day:"—",meals:{}};
       const ctx=d.context||"work";
+      const selectedDay=d.day||"—";
       return `
         <div class="day-card">
           <div class="day-header">
             <span class="day-title">Day ${i+1}</span>
-            <div class="context-toggle">
-              <button class="context-btn ${ctx==='work'?'active':''}" onclick="setDayContext('${day}','work')">Work</button>
-              <button class="context-btn ${ctx==='home'?'active':''}" onclick="setDayContext('${day}','home')">At Home</button>
+            <div class="day-controls">
+              <select class="day-select" onchange="setDayOfWeek('${day}',this.value)">
+                ${DAYS_OF_WEEK.map(dw=>`<option value="${dw}" ${selectedDay===dw?'selected':''}>${dw}</option>`).join("")}
+              </select>
+              <div class="context-toggle">
+                <button class="context-btn ${ctx==='work'?'active':''}" onclick="setDayContext('${day}','work')">Work</button>
+                <button class="context-btn ${ctx==='home'?'active':''}" onclick="setDayContext('${day}','home')">At Home</button>
+              </div>
             </div>
           </div>
           ${MEALS.map(meal=>`
@@ -388,53 +405,22 @@
   function homePlaceholder(meal) {
     return {breakfast:"e.g. Eggs, oatmeal",midmorning:"e.g. Fruit, nuts",lunch:"e.g. Leftovers, soup",afternoon:"e.g. Veggies and hummus",dinner:"e.g. Grilled chicken, veggies",other:"e.g. Smoothie"}[meal]||"";
   }
+  window.setDayOfWeek = function(day,val) {
+    if(!state.food[day]) state.food[day]={context:"work",day:val,meals:{}};
+    state.food[day].day=val; save("food/"+day+"/day",val);
+  };
   window.setDayContext = function(day,ctx) {
-    if(!state.food[day]) state.food[day]={context:ctx,meals:{}};
+    if(!state.food[day]) state.food[day]={context:ctx,day:"—",meals:{}};
     state.food[day].context=ctx; save("food/"+day+"/context",ctx); renderFood();
   };
   window.setMeal = function(day,meal,value) {
-    if(!state.food[day]) state.food[day]={context:"work",meals:{}};
+    if(!state.food[day]) state.food[day]={context:"work",day:"—",meals:{}};
     if(!state.food[day].meals) state.food[day].meals={};
     state.food[day].meals[meal]=value; save("food/"+day+"/meals/"+meal,value);
   };
   window.clearDay = function(day) {
     if(!confirm("Clear Day "+(["day1","day2","day3"].indexOf(day)+1)+"?")) return;
-    state.food[day]={context:"work",meals:{}}; save("food/"+day,state.food[day]); renderFood();
-  };
-
-  // ── NOTES ────────────────────────────────────────────────
-  function renderNotes() {
-    const el=document.getElementById("tab-notes");
-    const items=state.notes?.items||{};
-    const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
-    el.innerHTML=`
-      ${arr.length===0?'<div class="empty-msg">No notes yet — add one below</div>':''}
-      ${arr.map(n=>`
-        <div class="note-card">
-          <input class="note-title-input" placeholder="Title…" value="${escHtml(n.title||'')}" onchange="setNoteTitle('${n.id}',this.value)" />
-          <textarea class="note-body-input" placeholder="Start typing…" onchange="setNoteBody('${n.id}',this.value)">${escHtml(n.body||'')}</textarea>
-          <div class="note-footer">
-            <button class="delete-note-btn" onclick="deleteNote('${n.id}')">Delete note</button>
-          </div>
-        </div>`).join("")}
-      <button class="add-note-btn" onclick="addNote()">+ New note</button>`;
-  }
-  window.addNote = function() {
-    const id="n"+uid(); const item={title:"",body:"",ts:Date.now()};
-    if(!state.notes.items) state.notes.items={};
-    state.notes.items[id]=item; save("notes/items/"+id,item); renderNotes();
-  };
-  window.setNoteTitle = function(id,value) {
-    if(!state.notes.items[id]) return;
-    state.notes.items[id].title=value; save("notes/items/"+id+"/title",value);
-  };
-  window.setNoteBody = function(id,value) {
-    if(!state.notes.items[id]) return;
-    state.notes.items[id].body=value; save("notes/items/"+id+"/body",value);
-  };
-  window.deleteNote = function(id) {
-    if(!confirm("Delete this note?")) return;
-    delete state.notes.items[id]; save("notes/items/"+id,null); renderNotes();
+    state.food[day]={context:"work",day:"—",meals:{}}; save("food/"+day,state.food[day]); renderFood();
   };
 
   // ── PAY CYCLE ────────────────────────────────────────────
@@ -454,7 +440,7 @@
         <span class="section-label">Working amount</span>
         <div class="working-input-wrap">
           <span>$</span>
-          <input class="working-input" type="number" min="0" placeholder="0.00" value="${escHtml(working)}" oninput="setWorking(this.value)" />
+          <input class="working-input" type="number" min="0" step="any" placeholder="0.00" value="${escHtml(working)}" onblur="setWorking(this.value)" onkeydown="if(event.key==='Enter'){this.blur()}" />
         </div>
       </div>
       <div class="section">
@@ -468,7 +454,7 @@
           </div>`).join("")}
         <div class="add-row">
           <input class="name-input" id="bill-name" placeholder="Bill name" onkeydown="if(event.key==='Enter')addBill()" />
-          <input class="amt-input" id="bill-amt" type="number" min="0" placeholder="$0" onkeydown="if(event.key==='Enter')addBill()" />
+          <input class="amt-input" id="bill-amt" type="number" min="0" step="any" placeholder="$0" onkeydown="if(event.key==='Enter')addBill()" />
           <button class="add-btn" onclick="addBill()">+</button>
         </div>
         <div class="remaining-row">
@@ -488,7 +474,7 @@
           </div>`).join("")}
         <div class="add-row">
           <input class="name-input" id="out-name" placeholder="Item name" onkeydown="if(event.key==='Enter')addOutstanding()" />
-          <input class="amt-input" id="out-amt" type="number" min="0" placeholder="$0" onkeydown="if(event.key==='Enter')addOutstanding()" />
+          <input class="amt-input" id="out-amt" type="number" min="0" step="any" placeholder="$0" onkeydown="if(event.key==='Enter')addOutstanding()" />
           <button class="add-btn" onclick="addOutstanding()">+</button>
         </div>
         ${outstanding.length>0?`
@@ -499,7 +485,7 @@
       </div>
       <button class="clear-btn" onclick="clearPay()">Clear &amp; start new cycle</button>`;
   }
-  window.setWorking=function(v){state.pay.working=v;save("pay/working",v);};
+  window.setWorking=function(v){state.pay.working=v;save("pay/working",v);renderPay();};
   window.addBill=function(){
     const n=document.getElementById("bill-name").value.trim(); const a=parseFloat(document.getElementById("bill-amt").value);
     if(!n||isNaN(a)||a<=0) return;
