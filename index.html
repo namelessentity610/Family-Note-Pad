@@ -11,32 +11,26 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f2f2f7; color: #1c1c1e; min-height: 100vh; }
     #app { max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
-
     .header { padding: 20px 16px 8px; }
     .header-sub { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: #8e8e93; text-transform: uppercase; }
     .header-title { font-size: 26px; font-weight: 700; color: #1c1c1e; margin-top: 2px; }
-
     .tab-bar { display: flex; overflow-x: auto; padding: 10px 16px 0; gap: 6px; scrollbar-width: none; }
     .tab-bar::-webkit-scrollbar { display: none; }
-    .tab-btn { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #d1d1d6; background: none; color: #8e8e93; transition: all 0.15s; font-family: inherit; }
+    .tab-btn { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
     .tab-btn.active { background: #fff; color: #1c1c1e; border-color: transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-
     .content { padding: 16px; }
     .section { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 14px; }
     .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8e8e93; text-transform: uppercase; margin-bottom: 10px; display: block; }
-
     .line-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f2f2f7; gap: 10px; }
     .line-item-name { flex: 1; font-size: 15px; color: #1c1c1e; }
     .line-item-amt { font-size: 15px; font-weight: 600; color: #1c1c1e; margin-right: 10px; }
     .remove-btn { background: none; border: none; color: #c7c7cc; font-size: 20px; cursor: pointer; padding: 0 4px; line-height: 1; font-family: inherit; }
-
     .add-row { display: flex; gap: 6px; margin-top: 12px; }
     .add-row input { border-radius: 10px; padding: 11px 12px; font-size: 15px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
     .add-row input:focus { border-color: #007aff; }
     .add-row .name-input { flex: 1; }
     .add-row .amt-input { width: 80px; }
     .add-btn { background: #007aff; border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 18px; width: 44px; cursor: pointer; flex-shrink: 0; font-family: inherit; }
-
     .remaining-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f2f2f7; }
     .remaining-label { font-size: 12px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.08em; }
     .remaining-amt { font-size: 26px; font-weight: 700; }
@@ -47,13 +41,10 @@
     .progress-fill { background: #007aff; transition: width 0.3s; }
     .progress-fill.over { background: #ff3b30; }
     .progress-bg { flex: 1; background: #f2f2f7; }
-
     .working-input-wrap { display: flex; align-items: center; gap: 8px; }
     .working-input-wrap span { color: #8e8e93; font-size: 24px; }
     .working-input { flex: 1; background: none; border: none; outline: none; color: #1c1c1e; font-size: 32px; font-weight: 700; width: 100%; font-family: inherit; }
-
     .clear-btn { width: 100%; background: none; border: 1px solid #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 13px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
-
     .todo-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f2f2f7; }
     .check-btn { width: 24px; height: 24px; border-radius: 6px; border: 1.5px solid #d1d1d6; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-family: inherit; }
     .check-btn.checked { background: #34c759; border-color: #34c759; color: #fff; }
@@ -62,7 +53,6 @@
     .done-section-header { display: flex; justify-content: space-between; align-items: center; margin: 14px 0 6px; }
     .done-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8e8e93; text-transform: uppercase; }
     .clear-done-btn { background: none; border: none; color: #8e8e93; font-size: 12px; cursor: pointer; text-decoration: underline; font-family: inherit; }
-
     .project-card { background: #f9f9f9; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
     .project-name { font-size: 16px; font-weight: 500; color: #1c1c1e; flex: 1; }
     .project-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -72,20 +62,15 @@
     .status-btn.idle { background: #d1f2e0; color: #1a6435; border-color: transparent; }
     .project-note { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 13px; border: 1px solid #d1d1d6; background: #fff; color: #1c1c1e; outline: none; font-family: inherit; }
     .add-project-btn { width: 100%; background: none; border: 1px dashed #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 14px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
-
     .list-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
     .list-tab-btn { padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
     .list-tab-btn.active { background: #007aff; color: #fff; border-color: transparent; }
     .new-list-btn { padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px dashed #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
-
     .single-add-row { display: flex; gap: 8px; margin-bottom: 14px; }
     .single-add-row input { flex: 1; border-radius: 10px; padding: 12px 14px; font-size: 15px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
     .single-add-row input:focus { border-color: #007aff; }
-
     .empty-msg { text-align: center; color: #8e8e93; font-size: 14px; padding: 32px 0; }
     .sync-status { font-size: 11px; color: #8e8e93; text-align: right; padding: 4px 16px 0; }
-
-    /* Food tab */
     .day-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
     .day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .day-title { font-size: 17px; font-weight: 600; color: #1c1c1e; }
@@ -97,11 +82,16 @@
     .meal-input { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 14px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
     .meal-input:focus { border-color: #007aff; background: #fff; }
     .clear-food-btn { width: 100%; background: none; border: 1px solid #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 13px; padding: 11px; cursor: pointer; margin-top: 6px; font-family: inherit; }
-
+    .note-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .note-title-input { width: 100%; border: none; outline: none; font-size: 17px; font-weight: 600; color: #1c1c1e; font-family: inherit; background: none; margin-bottom: 10px; border-bottom: 1px solid #f2f2f7; padding-bottom: 10px; }
+    .note-body-input { width: 100%; border: none; outline: none; font-size: 15px; color: #1c1c1e; font-family: inherit; background: none; resize: none; min-height: 120px; line-height: 1.6; }
+    .note-footer { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #f2f2f7; padding-top: 10px; }
+    .delete-note-btn { background: none; border: none; color: #ff3b30; font-size: 13px; cursor: pointer; font-family: inherit; }
+    .add-note-btn { width: 100%; background: none; border: 1px dashed #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 14px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
     @media (prefers-color-scheme: dark) {
       body { background: #1c1c1e; color: #f2f2f7; }
       .header-title { color: #f2f2f7; }
-      .section, .day-card { background: #2c2c2e; }
+      .section, .day-card, .note-card { background: #2c2c2e; }
       .tab-btn { border-color: #3a3a3c; color: #8e8e93; }
       .tab-btn.active { background: #3a3a3c; color: #f2f2f7; box-shadow: none; }
       .line-item { border-bottom-color: #3a3a3c; }
@@ -110,7 +100,7 @@
       .remaining-row { border-top-color: #3a3a3c; }
       .progress-bg { background: #3a3a3c; }
       .working-input { color: #f2f2f7; }
-      .clear-btn, .clear-food-btn { border-color: #3a3a3c; }
+      .clear-btn, .clear-food-btn, .add-note-btn { border-color: #3a3a3c; }
       .todo-item { border-bottom-color: #3a3a3c; }
       .todo-text { color: #f2f2f7; }
       .check-btn { border-color: #3a3a3c; }
@@ -127,6 +117,9 @@
       .meal-input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
       .meal-input:focus { background: #2c2c2e; border-color: #007aff; }
       .day-title { color: #f2f2f7; }
+      .note-title-input { color: #f2f2f7; border-bottom-color: #3a3a3c; }
+      .note-body-input { color: #f2f2f7; }
+      .note-footer { border-top-color: #3a3a3c; }
     }
   </style>
 </head>
@@ -142,6 +135,7 @@
     <button class="tab-btn" onclick="switchTab('today')">✓ Today</button>
     <button class="tab-btn" onclick="switchTab('projects')">⚙ In Progress</button>
     <button class="tab-btn" onclick="switchTab('food')">🥗 Food</button>
+    <button class="tab-btn" onclick="switchTab('notes')">✎ Notes</button>
     <button class="tab-btn" onclick="switchTab('pay')">💰 Pay Cycle</button>
   </div>
   <div class="content">
@@ -149,6 +143,7 @@
     <div id="tab-today" style="display:none"></div>
     <div id="tab-projects" style="display:none"></div>
     <div id="tab-food" style="display:none"></div>
+    <div id="tab-notes" style="display:none"></div>
     <div id="tab-pay" style="display:none"></div>
   </div>
 </div>
@@ -177,11 +172,8 @@
     lists: { order:["grocery","supply","checkout"], grocery:{name:"Grocery",items:{}}, supply:{name:"Supply",items:{}}, checkout:{name:"To Check Out",items:{}} },
     today: { items:{} },
     projects: { items:{} },
-    food: {
-      day1: { context:"work", meals:{} },
-      day2: { context:"work", meals:{} },
-      day3: { context:"work", meals:{} }
-    },
+    food: { day1:{context:"work",meals:{}}, day2:{context:"work",meals:{}}, day3:{context:"work",meals:{}} },
+    notes: { items:{} },
     pay: { working:"", bills:{}, outstanding:{} }
   };
 
@@ -222,12 +214,12 @@
 
   window.switchTab = function(tab) {
     activeTab = tab;
-    const tabs = ["lists","today","projects","food","pay"];
+    const tabs = ["lists","today","projects","food","notes","pay"];
     document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", tabs[i] === tab));
     tabs.forEach(t => { document.getElementById("tab-"+t).style.display = t === tab ? "block" : "none"; });
   };
 
-  function renderAll() { renderLists(); renderToday(); renderProjects(); renderFood(); renderPay(); }
+  function renderAll() { renderLists(); renderToday(); renderProjects(); renderFood(); renderNotes(); renderPay(); }
 
   // ── LISTS ────────────────────────────────────────────────
   function renderLists() {
@@ -390,16 +382,12 @@
         </div>`;
     }).join("");
   }
-
   function workPlaceholder(meal) {
-    const p={breakfast:"e.g. Greek yogurt, hard boiled eggs",midmorning:"e.g. Almonds, protein bar",lunch:"e.g. Packed salad, sandwich",afternoon:"e.g. Apple, string cheese",dinner:"e.g. Meal prep, leftovers",other:"e.g. Protein shake"};
-    return p[meal]||"";
+    return {breakfast:"e.g. Greek yogurt, hard boiled eggs",midmorning:"e.g. Almonds, protein bar",lunch:"e.g. Packed salad, sandwich",afternoon:"e.g. Apple, string cheese",dinner:"e.g. Meal prep, leftovers",other:"e.g. Protein shake"}[meal]||"";
   }
   function homePlaceholder(meal) {
-    const p={breakfast:"e.g. Eggs, oatmeal",midmorning:"e.g. Fruit, nuts",lunch:"e.g. Leftovers, soup",afternoon:"e.g. Veggies and hummus",dinner:"e.g. Grilled chicken, veggies",other:"e.g. Smoothie"};
-    return p[meal]||"";
+    return {breakfast:"e.g. Eggs, oatmeal",midmorning:"e.g. Fruit, nuts",lunch:"e.g. Leftovers, soup",afternoon:"e.g. Veggies and hummus",dinner:"e.g. Grilled chicken, veggies",other:"e.g. Smoothie"}[meal]||"";
   }
-
   window.setDayContext = function(day,ctx) {
     if(!state.food[day]) state.food[day]={context:ctx,meals:{}};
     state.food[day].context=ctx; save("food/"+day+"/context",ctx); renderFood();
@@ -412,6 +400,41 @@
   window.clearDay = function(day) {
     if(!confirm("Clear Day "+(["day1","day2","day3"].indexOf(day)+1)+"?")) return;
     state.food[day]={context:"work",meals:{}}; save("food/"+day,state.food[day]); renderFood();
+  };
+
+  // ── NOTES ────────────────────────────────────────────────
+  function renderNotes() {
+    const el=document.getElementById("tab-notes");
+    const items=state.notes?.items||{};
+    const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    el.innerHTML=`
+      ${arr.length===0?'<div class="empty-msg">No notes yet — add one below</div>':''}
+      ${arr.map(n=>`
+        <div class="note-card">
+          <input class="note-title-input" placeholder="Title…" value="${escHtml(n.title||'')}" onchange="setNoteTitle('${n.id}',this.value)" />
+          <textarea class="note-body-input" placeholder="Start typing…" onchange="setNoteBody('${n.id}',this.value)">${escHtml(n.body||'')}</textarea>
+          <div class="note-footer">
+            <button class="delete-note-btn" onclick="deleteNote('${n.id}')">Delete note</button>
+          </div>
+        </div>`).join("")}
+      <button class="add-note-btn" onclick="addNote()">+ New note</button>`;
+  }
+  window.addNote = function() {
+    const id="n"+uid(); const item={title:"",body:"",ts:Date.now()};
+    if(!state.notes.items) state.notes.items={};
+    state.notes.items[id]=item; save("notes/items/"+id,item); renderNotes();
+  };
+  window.setNoteTitle = function(id,value) {
+    if(!state.notes.items[id]) return;
+    state.notes.items[id].title=value; save("notes/items/"+id+"/title",value);
+  };
+  window.setNoteBody = function(id,value) {
+    if(!state.notes.items[id]) return;
+    state.notes.items[id].body=value; save("notes/items/"+id+"/body",value);
+  };
+  window.deleteNote = function(id) {
+    if(!confirm("Delete this note?")) return;
+    delete state.notes.items[id]; save("notes/items/"+id,null); renderNotes();
   };
 
   // ── PAY CYCLE ────────────────────────────────────────────
