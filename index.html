@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Organizer" />
+  <title>Family Organizer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f2f2f7; color: #1c1c1e; min-height: 100vh; }
+    #app { max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
+
+    .header { padding: 20px 16px 8px; }
+    .header-sub { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: #8e8e93; text-transform: uppercase; }
+    .header-title { font-size: 26px; font-weight: 700; color: #1c1c1e; margin-top: 2px; }
+
+    .tab-bar { display: flex; overflow-x: auto; padding: 10px 16px 0; gap: 6px; scrollbar-width: none; }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #d1d1d6; background: none; color: #8e8e93; transition: all 0.15s; font-family: inherit; }
+    .tab-btn.active { background: #fff; color: #1c1c1e; border-color: transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+    .content { padding: 16px; }
+    .section { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 14px; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8e8e93; text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+    .line-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f2f2f7; gap: 10px; }
+    .line-item-name { flex: 1; font-size: 15px; color: #1c1c1e; }
+    .line-item-amt { font-size: 15px; font-weight: 600; color: #1c1c1e; margin-right: 10px; }
+    .remove-btn { background: none; border: none; color: #c7c7cc; font-size: 20px; cursor: pointer; padding: 0 4px; line-height: 1; font-family: inherit; }
+
+    .add-row { display: flex; gap: 6px; margin-top: 12px; }
+    .add-row input { border-radius: 10px; padding: 11px 12px; font-size: 15px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
+    .add-row input:focus { border-color: #007aff; }
+    .add-row .name-input { flex: 1; }
+    .add-row .amt-input { width: 80px; }
+    .add-btn { background: #007aff; border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 18px; width: 44px; cursor: pointer; flex-shrink: 0; font-family: inherit; }
+
+    .remaining-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f2f2f7; }
+    .remaining-label { font-size: 12px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.08em; }
+    .remaining-amt { font-size: 26px; font-weight: 700; }
+    .remaining-amt.positive { color: #34c759; }
+    .remaining-amt.negative { color: #ff3b30; }
+    .remaining-amt.zero { color: #8e8e93; }
+    .progress-bar { display: flex; margin-top: 8px; border-radius: 4px; overflow: hidden; height: 5px; }
+    .progress-fill { background: #007aff; transition: width 0.3s; }
+    .progress-fill.over { background: #ff3b30; }
+    .progress-bg { flex: 1; background: #f2f2f7; }
+
+    .working-input-wrap { display: flex; align-items: center; gap: 8px; }
+    .working-input-wrap span { color: #8e8e93; font-size: 24px; }
+    .working-input { flex: 1; background: none; border: none; outline: none; color: #1c1c1e; font-size: 32px; font-weight: 700; width: 100%; font-family: inherit; }
+
+    .clear-btn { width: 100%; background: none; border: 1px solid #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 13px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
+
+    .todo-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f2f2f7; }
+    .check-btn { width: 24px; height: 24px; border-radius: 6px; border: 1.5px solid #d1d1d6; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-family: inherit; }
+    .check-btn.checked { background: #34c759; border-color: #34c759; color: #fff; }
+    .todo-text { flex: 1; font-size: 15px; color: #1c1c1e; }
+    .todo-text.done { text-decoration: line-through; color: #8e8e93; }
+    .done-section-header { display: flex; justify-content: space-between; align-items: center; margin: 14px 0 6px; }
+    .done-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8e8e93; text-transform: uppercase; }
+    .clear-done-btn { background: none; border: none; color: #8e8e93; font-size: 12px; cursor: pointer; text-decoration: underline; font-family: inherit; }
+
+    .project-card { background: #f9f9f9; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .project-name { font-size: 16px; font-weight: 500; color: #1c1c1e; flex: 1; }
+    .project-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .status-btns { display: flex; gap: 6px; margin-bottom: 10px; }
+    .status-btn { flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
+    .status-btn.needs { background: #fff3cd; color: #856404; border-color: transparent; }
+    .status-btn.idle { background: #d1f2e0; color: #1a6435; border-color: transparent; }
+    .project-note { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 13px; border: 1px solid #d1d1d6; background: #fff; color: #1c1c1e; outline: none; font-family: inherit; }
+    .add-project-btn { width: 100%; background: none; border: 1px dashed #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 14px; padding: 13px; cursor: pointer; margin-top: 4px; font-family: inherit; }
+
+    .list-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .list-tab-btn { padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
+    .list-tab-btn.active { background: #007aff; color: #fff; border-color: transparent; }
+    .new-list-btn { padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px dashed #d1d1d6; background: none; color: #8e8e93; font-family: inherit; }
+
+    .single-add-row { display: flex; gap: 8px; margin-bottom: 14px; }
+    .single-add-row input { flex: 1; border-radius: 10px; padding: 12px 14px; font-size: 15px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
+    .single-add-row input:focus { border-color: #007aff; }
+
+    .empty-msg { text-align: center; color: #8e8e93; font-size: 14px; padding: 32px 0; }
+    .sync-status { font-size: 11px; color: #8e8e93; text-align: right; padding: 4px 16px 0; }
+
+    /* Food tab */
+    .day-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .day-title { font-size: 17px; font-weight: 600; color: #1c1c1e; }
+    .context-toggle { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid #d1d1d6; }
+    .context-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: none; color: #8e8e93; font-family: inherit; }
+    .context-btn.active { background: #007aff; color: #fff; }
+    .meal-row { margin-bottom: 10px; }
+    .meal-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
+    .meal-input { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 14px; border: 1px solid #d1d1d6; background: #f9f9f9; color: #1c1c1e; outline: none; font-family: inherit; }
+    .meal-input:focus { border-color: #007aff; background: #fff; }
+    .clear-food-btn { width: 100%; background: none; border: 1px solid #d1d1d6; border-radius: 12px; color: #8e8e93; font-size: 13px; padding: 11px; cursor: pointer; margin-top: 6px; font-family: inherit; }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #1c1c1e; color: #f2f2f7; }
+      .header-title { color: #f2f2f7; }
+      .section, .day-card { background: #2c2c2e; }
+      .tab-btn { border-color: #3a3a3c; color: #8e8e93; }
+      .tab-btn.active { background: #3a3a3c; color: #f2f2f7; box-shadow: none; }
+      .line-item { border-bottom-color: #3a3a3c; }
+      .line-item-name, .line-item-amt { color: #f2f2f7; }
+      .add-row input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
+      .remaining-row { border-top-color: #3a3a3c; }
+      .progress-bg { background: #3a3a3c; }
+      .working-input { color: #f2f2f7; }
+      .clear-btn, .clear-food-btn { border-color: #3a3a3c; }
+      .todo-item { border-bottom-color: #3a3a3c; }
+      .todo-text { color: #f2f2f7; }
+      .check-btn { border-color: #3a3a3c; }
+      .project-card { background: #1c1c1e; }
+      .project-name { color: #f2f2f7; }
+      .status-btn { border-color: #3a3a3c; }
+      .project-note { background: #2c2c2e; border-color: #3a3a3c; color: #f2f2f7; }
+      .add-project-btn { border-color: #3a3a3c; }
+      .list-tab-btn { border-color: #3a3a3c; }
+      .new-list-btn { border-color: #3a3a3c; }
+      .single-add-row input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
+      .context-toggle { border-color: #3a3a3c; }
+      .context-btn { color: #8e8e93; }
+      .meal-input { background: #1c1c1e; border-color: #3a3a3c; color: #f2f2f7; }
+      .meal-input:focus { background: #2c2c2e; border-color: #007aff; }
+      .day-title { color: #f2f2f7; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="header-sub">Family</div>
+    <div class="header-title">Daily Organizer</div>
+  </div>
+  <div class="sync-status" id="sync-status">Connecting…</div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('lists')">≡ Lists</button>
+    <button class="tab-btn" onclick="switchTab('today')">✓ Today</button>
+    <button class="tab-btn" onclick="switchTab('projects')">⚙ In Progress</button>
+    <button class="tab-btn" onclick="switchTab('food')">🥗 Food</button>
+    <button class="tab-btn" onclick="switchTab('pay')">💰 Pay Cycle</button>
+  </div>
+  <div class="content">
+    <div id="tab-lists"></div>
+    <div id="tab-today" style="display:none"></div>
+    <div id="tab-projects" style="display:none"></div>
+    <div id="tab-food" style="display:none"></div>
+    <div id="tab-pay" style="display:none"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3Z_vLm66NjQLbZA9y6eSw7D5RFVp8PhU",
+    authDomain: "scratch-paper-b76a0.firebaseapp.com",
+    databaseURL: "https://scratch-paper-b76a0-default-rtdb.firebaseio.com",
+    projectId: "scratch-paper-b76a0",
+    storageBucket: "scratch-paper-b76a0.firebasestorage.app",
+    messagingSenderId: "165247916069",
+    appId: "1:165247916069:web:8e02865f1add3c93db07cc"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getDatabase(firebaseApp);
+
+  const MEALS = ["breakfast","midmorning","lunch","afternoon","dinner","other"];
+  const MEAL_LABELS = { breakfast:"Breakfast", midmorning:"Mid-Morning Snack", lunch:"Lunch", afternoon:"Afternoon Snack", dinner:"Dinner", other:"Other" };
+
+  let state = {
+    lists: { order:["grocery","supply","checkout"], grocery:{name:"Grocery",items:{}}, supply:{name:"Supply",items:{}}, checkout:{name:"To Check Out",items:{}} },
+    today: { items:{} },
+    projects: { items:{} },
+    food: {
+      day1: { context:"work", meals:{} },
+      day2: { context:"work", meals:{} },
+      day3: { context:"work", meals:{} }
+    },
+    pay: { working:"", bills:{}, outstanding:{} }
+  };
+
+  let activeTab = "lists";
+  let activeList = "grocery";
+  const syncStatus = document.getElementById("sync-status");
+
+  const dbRef = ref(db, "organizer");
+  onValue(dbRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) state = deepMerge(state, data);
+    syncStatus.textContent = "✓ Synced";
+    renderAll();
+  }, () => { syncStatus.textContent = "⚠ Offline"; });
+
+  function deepMerge(base, override) {
+    const result = { ...base };
+    for (const key of Object.keys(override)) {
+      if (override[key] && typeof override[key] === "object" && !Array.isArray(override[key])) {
+        result[key] = deepMerge(base[key] || {}, override[key]);
+      } else { result[key] = override[key]; }
+    }
+    return result;
+  }
+
+  function save(path, value) {
+    syncStatus.textContent = "Saving…";
+    set(ref(db, "organizer/" + path), value)
+      .then(() => syncStatus.textContent = "✓ Synced")
+      .catch(() => syncStatus.textContent = "⚠ Save failed");
+  }
+
+  function fmt(n) { return Number(n).toLocaleString("en-US", { style:"currency", currency:"USD" }); }
+  function uid() { return Date.now() + Math.random().toString(36).slice(2,6); }
+  function escHtml(str) {
+    return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  window.switchTab = function(tab) {
+    activeTab = tab;
+    const tabs = ["lists","today","projects","food","pay"];
+    document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", tabs[i] === tab));
+    tabs.forEach(t => { document.getElementById("tab-"+t).style.display = t === tab ? "block" : "none"; });
+  };
+
+  function renderAll() { renderLists(); renderToday(); renderProjects(); renderFood(); renderPay(); }
+
+  // ── LISTS ────────────────────────────────────────────────
+  function renderLists() {
+    const el = document.getElementById("tab-lists");
+    const { order=["grocery","supply","checkout"], ...listsData } = state.lists || {};
+    const listKeys = order.filter(k => listsData[k]);
+    if (!activeList || !listsData[activeList]) activeList = listKeys[0];
+    const activeData = listsData[activeList];
+    const items = activeData?.items || {};
+    const itemArr = Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    const open = itemArr.filter(i=>!i.done);
+    const done = itemArr.filter(i=>i.done);
+    el.innerHTML = `
+      <div class="list-tabs">
+        ${listKeys.map(k=>`<button class="list-tab-btn ${k===activeList?'active':''}" onclick="setActiveList('${k}')">${escHtml(listsData[k].name)}${Object.values(listsData[k].items||{}).filter(i=>!i.done).length>0?' ('+Object.values(listsData[k].items||{}).filter(i=>!i.done).length+')':''}</button>`).join("")}
+        <button class="new-list-btn" onclick="promptNewList()">+ New</button>
+      </div>
+      <div class="single-add-row">
+        <input id="list-input" placeholder="Add to ${escHtml(activeData?.name||'')}…" onkeydown="if(event.key==='Enter')addListItem()" />
+        <button class="add-btn" onclick="addListItem()">+</button>
+      </div>
+      ${open.length===0&&done.length===0?'<div class="empty-msg">List is empty</div>':''}
+      ${open.map(item=>`
+        <div class="todo-item">
+          <button class="check-btn" onclick="toggleListItem('${item.id}')"></button>
+          <span class="todo-text">${escHtml(item.text)}</span>
+          <button class="remove-btn" onclick="removeListItem('${item.id}')">×</button>
+        </div>`).join("")}
+      ${done.length>0?`
+        <div class="done-section-header">
+          <span class="done-label">Checked (${done.length})</span>
+          <button class="clear-done-btn" onclick="clearDoneList()">Clear</button>
+        </div>
+        ${done.map(item=>`
+          <div class="todo-item" style="opacity:0.45">
+            <button class="check-btn checked" onclick="toggleListItem('${item.id}')">✓</button>
+            <span class="todo-text done">${escHtml(item.text)}</span>
+            <button class="remove-btn" onclick="removeListItem('${item.id}')">×</button>
+          </div>`).join("")}`:""}`;
+  }
+  window.setActiveList = function(k) { activeList=k; renderLists(); };
+  window.promptNewList = function() {
+    const name=prompt("List name:"); if(!name?.trim()) return;
+    const id="list_"+uid(); const order=[...(state.lists.order||[]),id];
+    state.lists.order=order; state.lists[id]={name:name.trim(),items:{}};
+    save("lists/order",order); save("lists/"+id,{name:name.trim(),items:{}}); activeList=id; renderLists();
+  };
+  window.addListItem = function() {
+    const input=document.getElementById("list-input"); const text=input.value.trim(); if(!text) return;
+    const id="i"+uid(); const item={text,done:false,ts:Date.now()};
+    if(!state.lists[activeList].items) state.lists[activeList].items={};
+    state.lists[activeList].items[id]=item; save("lists/"+activeList+"/items/"+id,item); input.value=""; renderLists();
+  };
+  window.toggleListItem = function(id) {
+    const item=state.lists[activeList].items[id]; item.done=!item.done;
+    save("lists/"+activeList+"/items/"+id+"/done",item.done); renderLists();
+  };
+  window.removeListItem = function(id) { delete state.lists[activeList].items[id]; save("lists/"+activeList+"/items/"+id,null); renderLists(); };
+  window.clearDoneList = function() {
+    Object.entries(state.lists[activeList].items||{}).forEach(([id,v])=>{ if(v.done){ delete state.lists[activeList].items[id]; save("lists/"+activeList+"/items/"+id,null); }});
+    renderLists();
+  };
+
+  // ── TODAY ────────────────────────────────────────────────
+  function renderToday() {
+    const el=document.getElementById("tab-today");
+    const items=state.today?.items||{};
+    const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    const open=arr.filter(i=>!i.done); const done=arr.filter(i=>i.done);
+    el.innerHTML=`
+      <div class="single-add-row">
+        <input id="today-input" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTodayItem()" />
+        <button class="add-btn" onclick="addTodayItem()">+</button>
+      </div>
+      ${open.length===0&&done.length===0?'<div class="empty-msg">Nothing on the list</div>':''}
+      ${open.map(item=>`
+        <div class="todo-item">
+          <button class="check-btn" onclick="toggleToday('${item.id}')"></button>
+          <span class="todo-text">${escHtml(item.text)}</span>
+          <button class="remove-btn" onclick="removeToday('${item.id}')">×</button>
+        </div>`).join("")}
+      ${done.length>0?`
+        <div class="done-section-header">
+          <span class="done-label">Done (${done.length})</span>
+          <button class="clear-done-btn" onclick="clearDoneToday()">Clear</button>
+        </div>
+        ${done.map(item=>`
+          <div class="todo-item" style="opacity:0.45">
+            <button class="check-btn checked" onclick="toggleToday('${item.id}')">✓</button>
+            <span class="todo-text done">${escHtml(item.text)}</span>
+            <button class="remove-btn" onclick="removeToday('${item.id}')">×</button>
+          </div>`).join("")}`:""}`;
+  }
+  window.addTodayItem = function() {
+    const input=document.getElementById("today-input"); const text=input.value.trim(); if(!text) return;
+    const id="i"+uid(); const item={text,done:false,ts:Date.now()};
+    if(!state.today.items) state.today.items={};
+    state.today.items[id]=item; save("today/items/"+id,item); input.value=""; renderToday();
+  };
+  window.toggleToday = function(id) { const item=state.today.items[id]; item.done=!item.done; save("today/items/"+id+"/done",item.done); renderToday(); };
+  window.removeToday = function(id) { delete state.today.items[id]; save("today/items/"+id,null); renderToday(); };
+  window.clearDoneToday = function() {
+    Object.entries(state.today.items||{}).forEach(([id,v])=>{ if(v.done){ delete state.today.items[id]; save("today/items/"+id,null); }});
+    renderToday();
+  };
+
+  // ── PROJECTS ─────────────────────────────────────────────
+  function renderProjects() {
+    const el=document.getElementById("tab-projects");
+    const items=state.projects?.items||{};
+    const arr=Object.entries(items).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    el.innerHTML=`
+      ${arr.map(p=>`
+        <div class="project-card">
+          <div class="project-header">
+            <span class="project-name">${escHtml(p.name)}</span>
+            <button class="remove-btn" onclick="removeProject('${p.id}')">×</button>
+          </div>
+          <div class="status-btns">
+            <button class="status-btn ${p.status==='active'?'needs':''}" onclick="setProjectStatus('${p.id}','active')">⚠ Needs action</button>
+            <button class="status-btn ${p.status!=='active'?'idle':''}" onclick="setProjectStatus('${p.id}','idle')">✓ Running fine</button>
+          </div>
+          <input class="project-note" placeholder="Notes…" value="${escHtml(p.note||'')}" onchange="setProjectNote('${p.id}',this.value)" />
+        </div>`).join("")}
+      <button class="add-project-btn" onclick="promptAddProject()">+ Add project</button>`;
+  }
+  window.promptAddProject = function() {
+    const name=prompt("Project name:"); if(!name?.trim()) return;
+    const id="p"+uid(); const item={name:name.trim(),status:"idle",note:"",ts:Date.now()};
+    if(!state.projects.items) state.projects.items={};
+    state.projects.items[id]=item; save("projects/items/"+id,item); renderProjects();
+  };
+  window.removeProject = function(id) { delete state.projects.items[id]; save("projects/items/"+id,null); renderProjects(); };
+  window.setProjectStatus = function(id,status) { state.projects.items[id].status=status; save("projects/items/"+id+"/status",status); renderProjects(); };
+  window.setProjectNote = function(id,note) { state.projects.items[id].note=note; save("projects/items/"+id+"/note",note); };
+
+  // ── FOOD ─────────────────────────────────────────────────
+  function renderFood() {
+    const el=document.getElementById("tab-food");
+    const food=state.food||{};
+    const days=["day1","day2","day3"];
+    el.innerHTML=days.map((day,i)=>{
+      const d=food[day]||{context:"work",meals:{}};
+      const ctx=d.context||"work";
+      return `
+        <div class="day-card">
+          <div class="day-header">
+            <span class="day-title">Day ${i+1}</span>
+            <div class="context-toggle">
+              <button class="context-btn ${ctx==='work'?'active':''}" onclick="setDayContext('${day}','work')">Work</button>
+              <button class="context-btn ${ctx==='home'?'active':''}" onclick="setDayContext('${day}','home')">At Home</button>
+            </div>
+          </div>
+          ${MEALS.map(meal=>`
+            <div class="meal-row">
+              <div class="meal-label">${MEAL_LABELS[meal]}</div>
+              <input class="meal-input" placeholder="${ctx==='work'?workPlaceholder(meal):homePlaceholder(meal)}" value="${escHtml((d.meals||{})[meal]||'')}" onchange="setMeal('${day}','${meal}',this.value)" />
+            </div>`).join("")}
+          <button class="clear-food-btn" onclick="clearDay('${day}')">Clear Day ${i+1}</button>
+        </div>`;
+    }).join("");
+  }
+
+  function workPlaceholder(meal) {
+    const p={breakfast:"e.g. Greek yogurt, hard boiled eggs",midmorning:"e.g. Almonds, protein bar",lunch:"e.g. Packed salad, sandwich",afternoon:"e.g. Apple, string cheese",dinner:"e.g. Meal prep, leftovers",other:"e.g. Protein shake"};
+    return p[meal]||"";
+  }
+  function homePlaceholder(meal) {
+    const p={breakfast:"e.g. Eggs, oatmeal",midmorning:"e.g. Fruit, nuts",lunch:"e.g. Leftovers, soup",afternoon:"e.g. Veggies and hummus",dinner:"e.g. Grilled chicken, veggies",other:"e.g. Smoothie"};
+    return p[meal]||"";
+  }
+
+  window.setDayContext = function(day,ctx) {
+    if(!state.food[day]) state.food[day]={context:ctx,meals:{}};
+    state.food[day].context=ctx; save("food/"+day+"/context",ctx); renderFood();
+  };
+  window.setMeal = function(day,meal,value) {
+    if(!state.food[day]) state.food[day]={context:"work",meals:{}};
+    if(!state.food[day].meals) state.food[day].meals={};
+    state.food[day].meals[meal]=value; save("food/"+day+"/meals/"+meal,value);
+  };
+  window.clearDay = function(day) {
+    if(!confirm("Clear Day "+(["day1","day2","day3"].indexOf(day)+1)+"?")) return;
+    state.food[day]={context:"work",meals:{}}; save("food/"+day,state.food[day]); renderFood();
+  };
+
+  // ── PAY CYCLE ────────────────────────────────────────────
+  function renderPay() {
+    const el=document.getElementById("tab-pay");
+    const pay=state.pay||{};
+    const working=pay.working||"";
+    const bills=Object.entries(pay.bills||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    const outstanding=Object.entries(pay.outstanding||{}).map(([id,v])=>({id,...v})).sort((a,b)=>a.ts-b.ts);
+    const workingNum=parseFloat(working)||0;
+    const billTotal=bills.reduce((s,b)=>s+b.amount,0);
+    const remaining=workingNum-billTotal;
+    const outTotal=outstanding.reduce((s,o)=>s+o.amount,0);
+    const pct=workingNum>0?Math.min(100,(billTotal/workingNum)*100):0;
+    el.innerHTML=`
+      <div class="section">
+        <span class="section-label">Working amount</span>
+        <div class="working-input-wrap">
+          <span>$</span>
+          <input class="working-input" type="number" min="0" placeholder="0.00" value="${escHtml(working)}" oninput="setWorking(this.value)" />
+        </div>
+      </div>
+      <div class="section">
+        <span class="section-label">Bills this cycle</span>
+        ${bills.length===0?'<div style="color:#8e8e93;font-size:13px;padding-bottom:8px">No bills added</div>':''}
+        ${bills.map(b=>`
+          <div class="line-item">
+            <span class="line-item-name">${escHtml(b.name)}</span>
+            <span class="line-item-amt">${fmt(b.amount)}</span>
+            <button class="remove-btn" onclick="removeBill('${b.id}')">×</button>
+          </div>`).join("")}
+        <div class="add-row">
+          <input class="name-input" id="bill-name" placeholder="Bill name" onkeydown="if(event.key==='Enter')addBill()" />
+          <input class="amt-input" id="bill-amt" type="number" min="0" placeholder="$0" onkeydown="if(event.key==='Enter')addBill()" />
+          <button class="add-btn" onclick="addBill()">+</button>
+        </div>
+        <div class="remaining-row">
+          <span class="remaining-label">Remaining</span>
+          <span class="remaining-amt ${remaining<0?'negative':remaining===0?'zero':'positive'}">${fmt(remaining)}</span>
+        </div>
+        ${workingNum>0&&billTotal>0?`<div class="progress-bar"><div class="progress-fill ${remaining<0?'over':''}" style="width:${pct}%"></div><div class="progress-bg"></div></div>`:''}
+      </div>
+      <div class="section">
+        <span class="section-label">Outstanding</span>
+        ${outstanding.length===0?'<div style="color:#8e8e93;font-size:13px;padding-bottom:8px">Nothing outstanding</div>':''}
+        ${outstanding.map(o=>`
+          <div class="line-item">
+            <span class="line-item-name">${escHtml(o.name)}</span>
+            <span class="line-item-amt">${fmt(o.amount)}</span>
+            <button class="remove-btn" onclick="removeOutstanding('${o.id}')">×</button>
+          </div>`).join("")}
+        <div class="add-row">
+          <input class="name-input" id="out-name" placeholder="Item name" onkeydown="if(event.key==='Enter')addOutstanding()" />
+          <input class="amt-input" id="out-amt" type="number" min="0" placeholder="$0" onkeydown="if(event.key==='Enter')addOutstanding()" />
+          <button class="add-btn" onclick="addOutstanding()">+</button>
+        </div>
+        ${outstanding.length>0?`
+          <div class="remaining-row">
+            <span class="remaining-label">Outstanding total</span>
+            <span class="remaining-amt" style="color:#ff9500">${fmt(outTotal)}</span>
+          </div>`:''}
+      </div>
+      <button class="clear-btn" onclick="clearPay()">Clear &amp; start new cycle</button>`;
+  }
+  window.setWorking=function(v){state.pay.working=v;save("pay/working",v);};
+  window.addBill=function(){
+    const n=document.getElementById("bill-name").value.trim(); const a=parseFloat(document.getElementById("bill-amt").value);
+    if(!n||isNaN(a)||a<=0) return;
+    const id="b"+uid(); const item={name:n,amount:a,ts:Date.now()};
+    if(!state.pay.bills) state.pay.bills={};
+    state.pay.bills[id]=item; save("pay/bills/"+id,item);
+    document.getElementById("bill-name").value=""; document.getElementById("bill-amt").value=""; renderPay();
+  };
+  window.removeBill=function(id){delete state.pay.bills[id];save("pay/bills/"+id,null);renderPay();};
+  window.addOutstanding=function(){
+    const n=document.getElementById("out-name").value.trim(); const a=parseFloat(document.getElementById("out-amt").value);
+    if(!n||isNaN(a)||a<=0) return;
+    const id="o"+uid(); const item={name:n,amount:a,ts:Date.now()};
+    if(!state.pay.outstanding) state.pay.outstanding={};
+    state.pay.outstanding[id]=item; save("pay/outstanding/"+id,item);
+    document.getElementById("out-name").value=""; document.getElementById("out-amt").value=""; renderPay();
+  };
+  window.removeOutstanding=function(id){delete state.pay.outstanding[id];save("pay/outstanding/"+id,null);renderPay();};
+  window.clearPay=function(){
+    if(!confirm("Clear this pay cycle?")) return;
+    state.pay={working:"",bills:{},outstanding:{}}; save("pay",state.pay); renderPay();
+  };
+</script>
+</body>
+</html>
